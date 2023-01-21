@@ -1,15 +1,19 @@
 package com.abhishek.blog.services.impl;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.abhishek.blog.entites.User;
+import com.abhishek.blog.exceptions.ResourceNotFoundException;
 import com.abhishek.blog.payloads.UserDto;
 import com.abhishek.blog.repositories.UserRepo;
 import com.abhishek.blog.services.UserService;
 import com.abhishek.blog.entites.*;
 
+@Service
 public class UserServiceImpl implements UserService {
 	
 	@Autowired
@@ -25,25 +29,39 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserDto updateUser(UserDto userDto, Integer userId) {
-	   User user =this.userRepo.findById(userId).orElseThrow((e->new ResourceNotFoundException("User","id",userId)));
-		return null;
+	   User user =this.userRepo.findById(userId)
+			   .orElseThrow(()->new ResourceNotFoundException("User","id",userId));
+	 user.setName(userDto.getName());
+	 user.setEmail(userDto.getEmail());
+	 user.setPassword(userDto.getPassword());
+	 user.setAbout(userDto.getAbout());
+	 User updateUser=this.userRepo.save(user);
+	 UserDto userDto1=this.userToDto(updateUser);
+	
+	   return userDto1;
 	}
 
 	@Override
 	public UserDto getUserById(Integer userId) {
-		// TODO Auto-generated method stub
-		return null;
+		User user =this.userRepo.findById(userId).orElseThrow(()->new ResourceNotFoundException("User","Id",userId));
+		
+		return this.userToDto(user);
 	}
 
 	@Override
 	public List<UserDto> getAllUsers() {
 		// TODO Auto-generated method stub
-		return null;
+		 List<User>users=this.userRepo.findAll();
+		 List<UserDto>userDto=users.stream().map(user->this.userToDto(user)).collect(Collectors.toList());
+		 return userDto;
+		 
+		  
 	}
 
 	@Override
 	public void deleteUser(Integer userId) {
-		// TODO Auto-generated method stub
+	User user=this.userRepo.findById(userId).orElseThrow(()->new ResourceNotFoundException("User","Id",userId));
+		this.userRepo.delete(user);
 
 	}
 	private User dtoTouser(UserDto userDto) {
