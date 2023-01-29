@@ -16,24 +16,23 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name="users")
+@Table(name="categories")
 @NoArgsConstructor
 @Getter
 @Setter
-public class User {
- 
-	@Id
+public class Category {
+
+	@Id 
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int id;
+	private Integer categoryId;
 	
-	@Column(name="user_name",nullable=false,length=100)
-	private String name;
-	private String email;
-	private String password;
-	private String about;
+	@Column(name="title",length=100,nullable=false)
+	private String categoryTitle;
 	
-	@OneToMany(mappedBy="user",cascade=CascadeType.ALL)//cascade means if anything happed to parent then things willautomatically apply to childs
+	@Column(name="description")
+	private String categoryDescription;
+	
+	@OneToMany(mappedBy="category",cascade=CascadeType.ALL)//cascade means if anything happed to parent then things willautomatically apply to childs
 	private List<Post>posts=new ArrayList<>();
-	
 	
 }
