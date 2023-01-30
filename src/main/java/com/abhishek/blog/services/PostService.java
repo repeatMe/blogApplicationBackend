@@ -8,10 +8,10 @@ import com.abhishek.blog.payloads.PostDto;
 public interface PostService {
 
 	PostDto createPost(PostDto postDtoInteger,Integer userId, Integer categoryId);
-	Post updatePost(PostDto postDto,Integer postId);
+	PostDto updatePost(PostDto postDto,Integer postId);
 	void deletePost(Integer postId);
-	Post getPostById(Integer postId);
-	List<Post> getAllPost();
+	PostDto getPostById(Integer postId);
+	List<PostDto> getAllPost();
 	List<PostDto>getPostsByCategory(Integer categoryId);
 	List<PostDto>getPostsByUser(Integer userId);
 	
